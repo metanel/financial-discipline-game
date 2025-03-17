@@ -6,8 +6,47 @@
     <title>משחק המשמעת הפיננסית</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <!-- No-JS fallback -->
+    <noscript>
+        <style>
+            #js-disabled-message {
+                display: block !important;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(42, 100, 150, 0.95);
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 2000;
+                text-align: center;
+                padding: 20px;
+            }
+        </style>
+    </noscript>
 </head>
 <body>
+    <!-- Message for browsers with JavaScript disabled -->
+    <div id="js-disabled-message" style="display: none;">
+        <div>
+            <h2>JavaScript נדרש עבור משחק זה</h2>
+            <p>נראה ש-JavaScript מושבת בדפדפן שלך. אנא הפעל JavaScript כדי לשחק במשחק המשמעת הפיננסית.</p>
+        </div>
+    </div>
+
+    <!-- Loading screen -->
+    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(42, 100, 150, 0.9); color: white; display: flex; justify-content: center; align-items: center; z-index: 1500;">
+        <div style="text-align: center;">
+            <h2>טוען משחק...</h2>
+            <div style="width: 200px; height: 10px; background-color: rgba(255,255,255,0.3); border-radius: 5px; margin: 20px auto;">
+                <div id="loading-bar" style="width: 0%; height: 100%; background-color: white; border-radius: 5px; transition: width 0.3s;"></div>
+            </div>
+        </div>
+    </div>
+
     <div id="game-container">
         <canvas id="game-canvas"></canvas>
         
@@ -112,8 +151,78 @@
         </div>
     </div>
     
-    <script src="obstacles.js"></script>
-    <script src="visual-effects.js"></script>
-    <script src="game.js"></script>
+    <script>
+        // Simple module/script loading system with error handling
+        window.gameModules = {
+            loaded: {},
+            ready: false,
+            loadScript: function(src, callback) {
+                const script = document.createElement('script');
+                script.src = src;
+                script.async = false; // Keep script execution order
+                
+                script.onload = function() {
+                    window.gameModules.loaded[src] = true;
+                    if (callback) callback(null);
+                    
+                    // Update loading bar
+                    const moduleCount = 3; // Total number of modules to load
+                    const loadedCount = Object.keys(window.gameModules.loaded).length;
+                    const loadingBar = document.getElementById('loading-bar');
+                    if (loadingBar) {
+                        loadingBar.style.width = (loadedCount / moduleCount * 100) + '%';
+                    }
+                    
+                    // If all modules are loaded, initialize the game
+                    if (loadedCount === moduleCount) {
+                        window.gameModules.ready = true;
+                        
+                        // Hide loading screen after a small delay
+                        setTimeout(function() {
+                            const loadingScreen = document.getElementById('loading-screen');
+                            if (loadingScreen) {
+                                loadingScreen.style.opacity = '0';
+                                loadingScreen.style.transition = 'opacity 0.5s ease';
+                                setTimeout(function() {
+                                    loadingScreen.style.display = 'none';
+                                }, 500);
+                            }
+                        }, 300);
+                    }
+                };
+                
+                script.onerror = function(err) {
+                    console.error('Failed to load script: ' + src);
+                    if (callback) callback(new Error('Failed to load ' + src));
+                    
+                    // Show error message
+                    alert('שגיאה בטעינת המשחק. נא לרענן את הדף ולנסות שוב.');
+                };
+                
+                document.body.appendChild(script);
+            }
+        };
+        
+        // Load scripts in the correct order
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide the noscript message since JS is obviously working
+            document.getElementById('js-disabled-message').style.display = 'none';
+            
+            // Load scripts in sequence with dependencies first
+            window.gameModules.loadScript('obstacles.js', function(err) {
+                if (!err) {
+                    window.gameModules.loadScript('visual-effects.js', function(err) {
+                        if (!err) {
+                            window.gameModules.loadScript('game.js', function(err) {
+                                if (err) {
+                                    console.error('Game initialization failed');
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
