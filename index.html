@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>משחק המשמעת הפיננסית</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- Day/Night cycle overlay -->
+        <div id="day-night-overlay"></div>
+        
+        <!-- Sun and Moon -->
+        <div id="sun"></div>
+        <div id="moon"></div>
+        
+        <div id="score-display" class="game-display">סך נכסים פיננסיים: 0 ש"ח</div>
+        <div id="date-display" class="game-display">מרץ 2025</div>
+        
+        <div id="monthly-stats">
+            <div>הוצאות חודשיות: <span id="expenses">0</span> ש"ח</div>
+            <div>הכנסה חודשית: <span id="income">5,000</span> ש"ח</div>
+        </div>
+        
+        <div class="health-bars">
+            <div class="health-bar">
+                <div class="label">בריאות פיזית</div>
+                <div class="bar">
+                    <div id="physical-health-fill" class="fill" style="width: 90%;"></div>
+                </div>
+            </div>
+            <div class="health-bar">
+                <div class="label">בריאות מנטלית</div>
+                <div class="bar">
+                    <div id="mental-health-fill" class="fill" style="width: 90%;"></div>
+                </div>
+            </div>
+            <div class="day-clock-container">
+                <div class="label">שעון יומי <span class="clock-icon">🕒</span></div>
+                <div id="day-clock">05:00</div>
+            </div>
+        </div>
+        
+        <div id="power-meter" class="power-meter">
+            <div id="power-meter-fill" class="power-meter-fill"></div>
+        </div>
+        
+        <div id="popup-message" class="popup-message"></div>
+        <div id="finance-tip" class="finance-tip"></div>
+        
+        <div id="status-negative" class="status-effect">השפעה מנטלית: חלש</div>
+        <div id="status-weight" class="status-effect">מצב גופני: כבד</div>
+        <div id="speed-indicator">מהירות: רגילה</div>
+        <div id="movement-instruction">לחץ על המסך כדי להתקדם!<br><span style="font-size: 32px; font-weight: normal; opacity: 0.9;">בלי לחיצה אין התקדמות</span></div>
+        
+        <!-- דיאלוג הפאוור-אפים -->
+        <div id="powerup-dialog" class="dialog-box">
+            <h3 id="powerup-title">נתקלת בהזדמנות לשיפור!</h3>
+            <p id="powerup-text">האם עשית אימון כבר היום?</p>
+            <button id="powerup-yes-btn">כן</button>
+            <button id="powerup-no-btn">לא</button>
+        </div>
+        
+        <!-- דיאלוג המכשול -->
+        <div id="obstacle-dialog" class="dialog-box">
+            <h3 id="obstacle-title">התמודדות עם דילמה פיננסית</h3>
+            <p id="obstacle-text">האם לבחור בהוצאה מיידית או להמשיך בתוכנית החיסכון?</p>
+            <button id="ignore-btn">סירוב</button>
+            <button id="accept-btn">הסכמה</button>
+        </div>
+        
+        <div id="welcome-screen">
+            <div id="welcome-content">
+                <h1>ברוכים הבאים למשחק המשמעת הפיננסית</h1>
+                <p>המטרה שלך היא לצבור 100,000 ש"ח באמצעות התמדה והחלטות פיננסיות חכמות.</p>
+                <p>לחץ על המסך (או החזק מקש הרווח) כדי להתקדם בדרך הפיננסית. התקדמות דורשת מאמץ מתמיד.</p>
+                <p>אתה מרוויח 5,000 ש"ח בחודש מהעבודה היציבה שלך, אך תיתקל בדילמות ופיתויים לאורך הדרך.</p>
+                <p>קצב ההתקדמות שלך מושפע מהמצב הפיזי והמנטלי.</p>
+                <p>זכור - יציבות פיננסית היא מרתון, לא ספרינט. נדרשת משמעת והתמדה לאורך זמן.</p>
+                <button id="start-btn">התחל</button>
+            </div>
+        </div>
+        
+        <div id="game-over">
+            <h2>ניהול פיננסי כושל</h2>
+            <p id="game-over-reason"></p>
+            <p>צברת סך של <span id="final-score">0</span> ש"ח בנכסים פיננסיים</p>
+            <div id="game-stats">
+                <p>תקופה שנוהלה: <span id="months-played">0</span> חודשים</p>
+                <p>הרגלים פיננסיים חיוביים: <span id="powerups-collected">0</span></p>
+                <p>דילמות פיננסיות שנפתרו: <span id="obstacles-avoided">0</span></p>
+            </div>
+            <p class="lesson">לקח: יציבות פיננסית דורשת משמעת, תכנון ארוך טווח והחלטות מושכלות.</p>
+            <button id="restart-btn">ניסיון חדש</button>
+        </div>
+        
+        <div id="win-screen">
+            <h2>יציבות פיננסית הושגה!</h2>
+            <p>הצלחת לצבור 100,000 ש"ח בנכסים פיננסיים!</p>
+            <p>כל הכבוד על המשמעת העצמית, ההתמדה וקבלת ההחלטות הנכונות.</p>
+            <div id="win-stats">
+                <p>תקופת צבירת הנכסים: <span id="win-months">0</span> חודשים</p>
+                <p>הרגלים פיננסיים חיוביים: <span id="win-powerups">0</span></p>
+                <p>דילמות פיננסיות שנפתרו: <span id="win-obstacles">0</span></p>
+            </div>
+            <p class="lesson">זכור: יציבות פיננסית היא תהליך מתמשך הדורש התמדה והחלטות מושכלות.</p>
+            <button id="play-again-btn">ניסיון נוסף</button>
+        </div>
+    </div>
+    
+    <script src="obstacles.js"></script>
+    <script src="visual-effects.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
