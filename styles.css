@@ -1,3 +1,6 @@
+/* משחק המשמעת הפיננסית - קובץ עיצוב */
+
+/* משתני צבע ועיצוב גלובליים */
 :root {
     --primary-color: #2a6496;
     --secondary-color: #4a4a4a;
@@ -16,8 +19,33 @@
     --sunset-sky-color-end: #FFD700;
     --sunrise-sky-color-start: #FF7F50;
     --sunrise-sky-color-end: #ADD8E6;
+    
+    /* משתני גודל מותאמים - ערכי ברירת מחדל למסכים רגילים */
+    --scale-factor: 1.5; /* במקום הכפלה מלאה (2), נשתמש בפקטור של 1.5 */
+    --font-size-small: calc(14px * var(--scale-factor));
+    --font-size-medium: calc(18px * var(--scale-factor));
+    --font-size-large: calc(24px * var(--scale-factor));
+    --spacing-small: calc(8px * var(--scale-factor));
+    --spacing-medium: calc(16px * var(--scale-factor));
+    --spacing-large: calc(24px * var(--scale-factor));
+    --border-radius: 10px;
 }
 
+/* התאמת גדלים למסכים קטנים */
+@media (max-width: 768px) {
+    :root {
+        --scale-factor: 1.2; /* פקטור קטן יותר למסכים קטנים */
+    }
+}
+
+/* התאמת גדלים למסכים גדולים */
+@media (min-width: 1440px) {
+    :root {
+        --scale-factor: 1.8; /* פקטור גדול יותר למסכים גדולים */
+    }
+}
+
+/* סגנון בסיסי */
 body {
     margin: 0;
     padding: 0;
@@ -40,51 +68,11 @@ body {
     top: 0;
     left: 0;
     touch-action: none;
-    transition: filter 2s ease; /* Smooth transition for day/night filter */
+    transition: filter 2s ease; /* מעבר חלק לאפקט יום/לילה */
 }
 
-.game-display {
-    position: absolute;
-    padding: 20px 30px; /* Increased size (double) */
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    font-size: 32px; /* Increased size (double) */
-    font-weight: 600;
-    z-index: 10;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-#score-display {
-    top: 30px;
-    right: 30px;
-    color: var(--primary-color);
-}
-
-#date-display {
-    top: 30px;
-    left: 30px;
-    color: var(--secondary-color);
-}
-
-#monthly-stats {
-    position: absolute;
-    top: 120px;
-    right: 30px;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 20px 30px; /* Increased size (double) */
-    border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    font-size: 28px; /* Increased size (double) */
-    line-height: 1.6;
-    z-index: 10;
-}
-
-#monthly-stats div {
-    margin-bottom: 10px;
-}
-
-#welcome-screen {
+/* מסך טעינה */
+#loading-screen {
     position: fixed;
     top: 0;
     left: 0;
@@ -95,359 +83,122 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1500;
     text-align: center;
 }
 
-#welcome-content {
-    width: 80%;
-    max-width: 800px;
-    padding: 40px;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 15px;
+#loading-screen h2 {
+    font-size: var(--font-size-large);
+    margin-bottom: var(--spacing-medium);
 }
 
-#welcome-content h1 {
-    font-size: 48px;
-    margin-bottom: 30px;
+#loading-bar {
+    width: 0%;
+    height: 100%;
+    background-color: white;
+    border-radius: 5px;
+    transition: width 0.3s;
 }
 
-#welcome-content p {
-    font-size: 24px;
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-
-#start-btn, #restart-btn, #play-again-btn {
-    margin-top: 40px;
-    padding: 16px 32px;
-    font-size: 28px;
-    font-weight: 600;
-    background-color: var(--success-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-#start-btn:hover, #restart-btn:hover, #play-again-btn:hover {
-    background-color: #2c6a4f;
-    transform: translateY(-4px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.dialog-box {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--card-color);
-    border: 1px solid #dee2e6;
-    border-radius: 16px;
-    padding: 50px; /* Increased size (double) */
-    text-align: center;
-    z-index: 100;
-    display: none;
-    width: 80%;
-    max-width: 900px; /* Increased size (double) */
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    line-height: 1.6;
-    animation: dialog-appear 0.3s ease-out forwards;
-}
-
-@keyframes dialog-appear {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -40%);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
-}
-
-.dialog-box h3 {
-    margin-top: 0;
-    color: var(--primary-color);
-    font-weight: 600;
-    font-size: 40px; /* Increased size (double) */
-}
-
-.dialog-box p {
-    margin: 30px 0; /* Increased size (double) */
-    font-size: 32px; /* Increased size (double) */
-}
-
-.dialog-box button {
-    margin: 16px; /* Increased size (double) */
-    padding: 20px 40px; /* Increased size (double) */
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 32px; /* Increased size (double) */
-    font-weight: 600;
-    transition: background-color 0.3s, transform 0.1s;
-    min-width: 200px; /* Increased size (double) */
-}
-
-.dialog-box button:hover {
-    background-color: #1e5180;
-    transform: translateY(-4px);
-}
-
-.dialog-box button.no-btn {
-    background-color: var(--danger-color);
-}
-
-.dialog-box button.no-btn:hover {
-    background-color: #c04848;
-}
-
-#obstacle-dialog button {
-    margin: 16px; /* Increased size (double) */
-    padding: 20px 40px; /* Increased size (double) */
-    font-size: 32px; /* Increased size (double) */
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-    min-width: 240px; /* Increased size (double) */
-}
-
-#ignore-btn {
-    background-color: var(--success-color);
-    color: white;
-}
-
-#accept-btn {
-    background-color: var(--warning-color);
-    color: white;
-}
-
-#ignore-btn:hover {
-    background-color: #2c6a4f;
-    transform: translateY(-4px);
-}
-
-#accept-btn:hover {
-    background-color: #c77730;
-    transform: translateY(-4px);
-}
-
-#game-over {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(50, 50, 50, 0.95);
-    color: white;
-    padding: 60px; /* Increased size (double) */
-    border-radius: 16px;
-    text-align: center;
-    z-index: 100;
-    display: none;
-    width: 80%;
-    max-width: 1000px; /* Increased size (double) */
-    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.3);
-    line-height: 1.6;
-    animation: fade-in 0.7s ease-out forwards;
-}
-
-@keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-#game-over h2,
-#win-screen h2 {
-    font-size: 48px; /* Increased size (double) */
-    margin-top: 0;
-    margin-bottom: 40px; /* Increased size (double) */
-}
-
-#game-over p,
-#win-screen p {
-    font-size: 32px; /* Increased size (double) */
-    margin-bottom: 20px; /* Increased size (double) */
-}
-
-#win-screen {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* מסך שגיאת JavaScript */
+#js-disabled-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-color: rgba(42, 100, 150, 0.95);
     color: white;
-    padding: 60px; /* Increased size (double) */
-    border-radius: 16px;
-    text-align: center;
-    z-index: 100;
     display: none;
-    width: 80%;
-    max-width: 1000px; /* Increased size (double) */
-    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.3);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    text-align: center;
+    padding: var(--spacing-medium);
+}
+
+#js-disabled-message h2 {
+    font-size: var(--font-size-large);
+    margin-bottom: var(--spacing-medium);
+}
+
+#js-disabled-message p {
+    font-size: var(--font-size-medium);
+}
+
+/* תצוגת נתוני משחק */
+.game-display {
+    position: absolute;
+    padding: var(--spacing-medium) var(--spacing-large);
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-large);
+    font-weight: 600;
+    z-index: 10;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+#score-display {
+    top: var(--spacing-large);
+    right: var(--spacing-large);
+    color: var(--primary-color);
+}
+
+#date-display {
+    top: var(--spacing-large);
+    left: var(--spacing-large);
+    color: var(--secondary-color);
+}
+
+#monthly-stats {
+    position: absolute;
+    top: calc(var(--spacing-large) * 3);
+    right: var(--spacing-large);
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: var(--spacing-medium) var(--spacing-large);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    font-size: var(--font-size-medium);
     line-height: 1.6;
-    animation: scale-in 0.6s ease-out forwards;
+    z-index: 10;
 }
 
-@keyframes scale-in {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
+#monthly-stats div {
+    margin-bottom: var(--spacing-small);
 }
-
-.popup-message {
-    position: absolute;
-    bottom: 200px; /* Increased size (double) */
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 24px 48px; /* Increased size (double) */
-    background-color: rgba(50, 50, 50, 0.9);
-    color: white;
-    border-radius: 50px; /* Increased size (double) */
-    font-size: 32px; /* Increased size (double) */
-    opacity: 0;
-    transition: opacity 0.5s;
-    z-index: 20;
-    max-width: 80%;
-    text-align: center;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
-.power-meter {
-    position: absolute;
-    bottom: 50px; /* Increased size (double) */
-    left: 40px; /* Increased size (double) */
-    width: 400px; /* Increased size (double) */
-    height: 24px; /* Increased size (double) */
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 12px; /* Increased size (double) */
-    overflow: hidden;
-    display: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.power-meter-fill {
-    height: 100%;
-    background-color: var(--success-color);
-    width: 0%;
-    transition: width 0.1s linear;
-}
-
-.status-effect {
-    position: absolute;
-    top: 50%;  /* Center vertically */
-    left: 50%;  /* Center horizontally */
-    transform: translate(-50%, 300px);  /* Increased size (double) */
-    background-color: rgba(50, 50, 50, 0.8);
-    color: white;
-    padding: 16px 30px; /* Increased size (double) */
-    border-radius: 10px;
-    font-size: 28px; /* Increased size (double) */
-    display: none;
-    margin: 0 10px; /* Increased size (double) */
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    z-index: 15;
-    animation: status-effect-appear 0.4s ease forwards;
-}
-
-@keyframes status-effect-appear {
-    from {
-        opacity: 0;
-        transform: translate(-50%, 340px); /* Increased size (double) */
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, 300px); /* Increased size (double) */
-    }
-}
-
-#status-negative {
-    background-color: rgba(212, 91, 91, 0.9);
-}
-
-#status-weight {
-    background-color: rgba(211, 135, 62, 0.9);
-}
-
-#speed-indicator {
-    position: absolute;
-    bottom: 50px; /* Increased size (double) */
-    right: 40px; /* Increased size (double) */
-    padding: 16px 30px; /* Increased size (double) */
-    background-color: rgba(50, 50, 50, 0.8);
-    color: white;
-    border-radius: 10px;
-    font-size: 28px; /* Increased size (double) */
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    transition: background-color 0.3s ease;
-}
-
-#movement-instruction {
-    position: absolute;
-    top: 50%; 
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 30px 60px; /* Increased size (double) */
-    background-color: rgba(50, 50, 50, 0.8);
-    color: white;
-    border-radius: 16px;
-    font-size: 48px; /* Increased size (double) */
-    font-weight: bold;
-    display: none;
-    z-index: 25;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    max-width: 80%;
-    animation: pulse 1.5s infinite alternate;
-}
-
-@keyframes pulse {
-    from { transform: translate(-50%, -50%) scale(1); }
-    to { transform: translate(-50%, -50%) scale(1.05); }
-}
-
-/* Health indicators in center */
+/* אלמנטי מידע - מדי בריאות ושעון יומי */
 .health-bars {
     position: absolute;
-    top: 240px; /* Increased size (double) */
+    top: calc(var(--spacing-large) * 6);
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(255, 255, 255, 0.9);
-    padding: 30px; /* Increased size (double) */
-    border-radius: 10px;
+    padding: var(--spacing-large);
+    border-radius: var(--border-radius);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     z-index: 10;
-    width: 520px; /* Increased size (double) */
+    width: calc(260px * var(--scale-factor));
     text-align: center;
     transition: all 0.3s ease;
 }
 
 .health-bar {
-    margin-bottom: 30px; /* Increased size (double) */
+    margin-bottom: var(--spacing-large);
 }
 
 .health-bar .label {
-    font-size: 28px; /* Increased size (double) */
+    font-size: var(--font-size-medium);
     font-weight: 600;
-    margin-bottom: 10px; /* Increased size (double) */
+    margin-bottom: var(--spacing-small);
     color: var(--secondary-color);
 }
 
 .health-bar .bar {
     width: 100%;
-    height: 24px; /* Increased size (double) */
+    height: calc(12px * var(--scale-factor));
     background-color: #e9ecef;
-    border-radius: 12px; /* Increased size (double) */
+    border-radius: calc(6px * var(--scale-factor));
     overflow: hidden;
 }
 
@@ -465,19 +216,19 @@ body {
 }
 
 .day-clock-container {
-    margin-top: 30px; /* Increased size (double) */
+    margin-top: var(--spacing-large);
     text-align: center;
 }
 
 #day-clock {
-    font-size: 48px; /* Increased size (double) */
+    font-size: calc(24px * var(--scale-factor));
     font-weight: bold;
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
-    padding: 10px 30px; /* Increased size (double) */
-    border-radius: 10px;
+    padding: calc(5px * var(--scale-factor)) calc(15px * var(--scale-factor));
+    border-radius: var(--border-radius);
     display: inline-block;
-    margin-top: 10px; /* Increased size (double) */
+    margin-top: var(--spacing-small);
     transition: transform 0.3s ease;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
@@ -488,20 +239,120 @@ body {
 
 .clock-icon {
     display: inline-block;
-    margin-right: 10px; /* Increased size (double) */
-    font-size: 36px; /* Increased size (double) */
+    margin-right: var(--spacing-small);
+    font-size: calc(18px * var(--scale-factor));
+}
+
+/* מד כוח ואינדיקטורים של מצב */
+.power-meter {
+    position: absolute;
+    bottom: calc(25px * var(--scale-factor));
+    left: calc(20px * var(--scale-factor));
+    width: calc(200px * var(--scale-factor));
+    height: calc(12px * var(--scale-factor));
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: calc(6px * var(--scale-factor));
+    overflow: hidden;
+    display: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.power-meter-fill {
+    height: 100%;
+    background-color: var(--success-color);
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+.status-effect {
+    position: absolute;
+    top: 50%;  /* Center vertically */
+    left: 50%;  /* Center horizontally */
+    transform: translate(-50%, calc(150px * var(--scale-factor)));
+    background-color: rgba(50, 50, 50, 0.8);
+    color: white;
+    padding: calc(8px * var(--scale-factor)) calc(15px * var(--scale-factor));
+    border-radius: var(--border-radius);
+    font-size: calc(14px * var(--scale-factor));
+    display: none;
+    margin: 0 calc(5px * var(--scale-factor));
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    z-index: 15;
+}
+
+#status-negative {
+    background-color: rgba(212, 91, 91, 0.9);
+}
+
+#status-weight {
+    background-color: rgba(211, 135, 62, 0.9);
+}
+
+#speed-indicator {
+    position: absolute;
+    bottom: calc(25px * var(--scale-factor));
+    right: calc(20px * var(--scale-factor));
+    padding: calc(8px * var(--scale-factor)) calc(15px * var(--scale-factor));
+    background-color: rgba(50, 50, 50, 0.8);
+    color: white;
+    border-radius: var(--border-radius);
+    font-size: calc(14px * var(--scale-factor));
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s ease;
+}
+
+#movement-instruction {
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: calc(15px * var(--scale-factor)) calc(30px * var(--scale-factor));
+    background-color: rgba(50, 50, 50, 0.8);
+    color: white;
+    border-radius: var(--border-radius);
+    font-size: calc(24px * var(--scale-factor));
+    font-weight: bold;
+    display: none;
+    z-index: 25;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 80%;
+}
+
+#movement-instruction span {
+    font-size: calc(16px * var(--scale-factor));
+    font-weight: normal;
+    opacity: 0.9;
+}
+/* הודעות ועצות */
+.popup-message {
+    position: absolute;
+    bottom: calc(100px * var(--scale-factor));
+    left: 50%;
+    transform: translateX(-50%);
+    padding: calc(12px * var(--scale-factor)) calc(24px * var(--scale-factor));
+    background-color: rgba(50, 50, 50, 0.9);
+    color: white;
+    border-radius: calc(25px * var(--scale-factor));
+    font-size: calc(16px * var(--scale-factor));
+    opacity: 0;
+    transition: opacity 0.5s, transform 0.5s;
+    z-index: 20;
+    max-width: 80%;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .finance-tip {
     position: absolute;
-    bottom: 50px; /* Increased size (double) */
+    bottom: calc(25px * var(--scale-factor));
     left: 50%;
     transform: translateX(-50%);
-    padding: 20px 40px; /* Increased size (double) */
+    padding: calc(10px * var(--scale-factor)) calc(20px * var(--scale-factor));
     background-color: rgba(42, 100, 150, 0.85);
     color: white;
-    border-radius: 10px;
-    font-size: 28px; /* Increased size (double) */
+    border-radius: var(--border-radius);
+    font-size: calc(14px * var(--scale-factor));
     max-width: 80%;
     text-align: center;
     line-height: 1.4;
@@ -511,48 +362,138 @@ body {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Sun and Moon */
+/* אנימציות */
+@keyframes pulse {
+    from { transform: translate(-50%, -50%) scale(1); }
+    to { transform: translate(-50%, -50%) scale(1.05); }
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scale-in {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes dialog-appear {
+    from { opacity: 0; transform: translate(-50%, -40%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+@keyframes obstacle-dialog-exit {
+    from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    to { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+}
+
+@keyframes powerup-dialog-exit {
+    from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    to { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+}
+
+@keyframes status-effect-appear {
+    from { opacity: 0; transform: translate(-50%, calc(170px * var(--scale-factor))); }
+    to { opacity: 1; transform: translate(-50%, calc(150px * var(--scale-factor))); }
+}
+
+@keyframes shield-expand {
+    0% { width: 0; height: 0; opacity: 0; }
+    50% { width: calc(200px * var(--scale-factor)); height: calc(200px * var(--scale-factor)); opacity: 0.7; }
+    100% { width: calc(300px * var(--scale-factor)); height: calc(300px * var(--scale-factor)); opacity: 0; }
+}
+
+@keyframes checkmark-appear {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+    100% { opacity: 0; transform: translate(-50%, -130%) scale(1); }
+}
+
+@keyframes mental-boost {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes physical-boost {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes negative-mental {
+    0% { opacity: 0; }
+    30% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes negative-physical {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes wrong-answer {
+    0% { opacity: 0; }
+    25% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes correct-answer {
+    0% { opacity: 0; }
+    25% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes crack-grow {
+    0% { width: 0; }
+    60% { width: 60%; }
+    100% { width: 50%; }
+}
+
+/* יום/לילה ואלמנטים סביבתיים */
 #sun {
     position: absolute;
-    top: 120px; /* Increased size (double) */
-    right: 200px; /* Increased size (double) */
-    width: 120px; /* Increased size (double) */
-    height: 120px; /* Increased size (double) */
+    top: calc(60px * var(--scale-factor));
+    right: calc(100px * var(--scale-factor));
+    width: calc(60px * var(--scale-factor));
+    height: calc(60px * var(--scale-factor));
     background: radial-gradient(circle, #FFD700 40%, rgba(255, 215, 0, 0) 70%);
     border-radius: 50%;
-    box-shadow: 0 0 40px rgba(255, 215, 0, 0.7);
+    box-shadow: 0 0 calc(20px * var(--scale-factor)) rgba(255, 215, 0, 0.7);
     z-index: 5;
     opacity: 1;
-    transition: all 4s ease; /* Increased transition time for smoother day/night change */
+    transition: all 4s ease; /* מעבר איטי יותר לשינוי יום/לילה חלק */
 }
 
 #moon {
     position: absolute;
-    top: 120px; /* Increased size (double) */
-    right: 200px; /* Increased size (double) */
-    width: 100px; /* Increased size (double) */
-    height: 100px; /* Increased size (double) */
+    top: calc(60px * var(--scale-factor));
+    right: calc(100px * var(--scale-factor));
+    width: calc(50px * var(--scale-factor));
+    height: calc(50px * var(--scale-factor));
     background: radial-gradient(circle, #E6E6FA 40%, rgba(230, 230, 250, 0) 70%);
     border-radius: 50%;
-    box-shadow: 0 0 30px rgba(230, 230, 250, 0.5);
+    box-shadow: 0 0 calc(15px * var(--scale-factor)) rgba(230, 230, 250, 0.5);
     z-index: 5;
     opacity: 0;
-    transition: all 4s ease; /* Increased transition time for smoother day/night change */
+    transition: all 4s ease; /* מעבר איטי יותר לשינוי יום/לילה חלק */
 }
 
-/* Moon shadow effect */
+/* אפקט צל על הירח */
 #moon::before {
     content: '';
     position: absolute;
-    top: 20px; /* Increased size (double) */
-    left: 20px; /* Increased size (double) */
-    width: 90px; /* Increased size (double) */
-    height: 90px; /* Increased size (double) */
+    top: calc(10px * var(--scale-factor));
+    left: calc(10px * var(--scale-factor));
+    width: calc(45px * var(--scale-factor));
+    height: calc(45px * var(--scale-factor));
     background: radial-gradient(circle, rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0) 70%);
     border-radius: 50%;
 }
 
-/* Day/Night cycle overlay */
+/* אוברליי מחזור יום/לילה */
 #day-night-overlay {
     position: absolute;
     top: 0;
@@ -562,77 +503,456 @@ body {
     background-color: rgba(0, 0, 30, 0);
     z-index: 3;
     pointer-events: none;
-    transition: background-color 4s ease; /* Increased transition time for smoother day/night change */
+    transition: background-color 4s ease; /* מעבר איטי יותר לשינוי יום/לילה חלק */
+}
+/* מסכי תחילה, סיום וניצחון */
+#welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(42, 100, 150, 0.9);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
+#welcome-content {
+    width: 80%;
+    max-width: calc(400px * var(--scale-factor));
+    padding: calc(20px * var(--scale-factor));
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: calc(15px * var(--scale-factor));
+}
+
+#welcome-content h1 {
+    font-size: calc(24px * var(--scale-factor));
+    margin-bottom: calc(15px * var(--scale-factor));
+}
+
+#welcome-content p {
+    font-size: calc(12px * var(--scale-factor));
+    margin-bottom: calc(10px * var(--scale-factor));
+    line-height: 1.6;
+}
+
+#start-btn, #restart-btn, #play-again-btn {
+    margin-top: calc(20px * var(--scale-factor));
+    padding: calc(8px * var(--scale-factor)) calc(16px * var(--scale-factor));
+    font-size: calc(14px * var(--scale-factor));
+    font-weight: 600;
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    border-radius: calc(var(--border-radius) / 2);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#start-btn:hover, #restart-btn:hover, #play-again-btn:hover {
+    background-color: #2c6a4f;
+    transform: translateY(calc(-2px * var(--scale-factor)));
+    box-shadow: 0 calc(3px * var(--scale-factor)) calc(6px * var(--scale-factor)) rgba(0, 0, 0, 0.15);
+}
+
+#game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(50, 50, 50, 0.95);
+    color: white;
+    padding: calc(30px * var(--scale-factor));
+    border-radius: var(--border-radius);
+    text-align: center;
+    z-index: 100;
+    display: none;
+    width: 80%;
+    max-width: calc(500px * var(--scale-factor));
+    box-shadow: 0 calc(8px * var(--scale-factor)) calc(25px * var(--scale-factor)) rgba(0, 0, 0, 0.3);
+    line-height: 1.6;
+    animation: fade-in 0.7s ease-out forwards;
+}
+
+#win-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(42, 100, 150, 0.95);
+    color: white;
+    padding: calc(30px * var(--scale-factor));
+    border-radius: var(--border-radius);
+    text-align: center;
+    z-index: 100;
+    display: none;
+    width: 80%;
+    max-width: calc(500px * var(--scale-factor));
+    box-shadow: 0 calc(8px * var(--scale-factor)) calc(25px * var(--scale-factor)) rgba(0, 0, 0, 0.3);
+    line-height: 1.6;
+    animation: scale-in 0.6s ease-out forwards;
+}
+
+#game-over h2,
+#win-screen h2 {
+    font-size: calc(24px * var(--scale-factor));
+    margin-top: 0;
+    margin-bottom: calc(20px * var(--scale-factor));
+}
+
+#game-over p,
+#win-screen p {
+    font-size: calc(16px * var(--scale-factor));
+    margin-bottom: calc(10px * var(--scale-factor));
+}
+
+#game-stats,
+#win-stats {
+    margin: calc(15px * var(--scale-factor)) 0;
+    padding: calc(10px * var(--scale-factor));
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+}
+
+.lesson {
+    font-style: italic;
+    font-weight: 500;
+    margin-top: calc(15px * var(--scale-factor));
+}
+
+/* דיאלוגים עם שחקנים */
+.dialog-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--card-color);
+    border: 1px solid #dee2e6;
+    border-radius: var(--border-radius);
+    padding: calc(25px * var(--scale-factor));
+    text-align: center;
+    z-index: 100;
+    display: none;
+    width: 80%;
+    max-width: calc(450px * var(--scale-factor));
+    box-shadow: 0 calc(5px * var(--scale-factor)) calc(20px * var(--scale-factor)) rgba(0, 0, 0, 0.15);
+    line-height: 1.6;
+}
+
+.dialog-box h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: calc(20px * var(--scale-factor));
+}
+
+.dialog-box p {
+    margin: calc(15px * var(--scale-factor)) 0;
+    font-size: calc(16px * var(--scale-factor));
+}
+
+.dialog-box button {
+    margin: calc(8px * var(--scale-factor));
+    padding: calc(10px * var(--scale-factor)) calc(20px * var(--scale-factor));
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: calc(var(--border-radius) / 2);
+    cursor: pointer;
+    font-size: calc(16px * var(--scale-factor));
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.1s;
+    min-width: calc(100px * var(--scale-factor));
+}
+
+.dialog-box button:hover {
+    background-color: #1e5180;
+    transform: translateY(calc(-2px * var(--scale-factor)));
+}
+
+.dialog-box button.no-btn {
+    background-color: var(--danger-color);
+}
+
+.dialog-box button.no-btn:hover {
+    background-color: #c04848;
+}
+
+#obstacle-dialog button {
+    margin: calc(8px * var(--scale-factor));
+    padding: calc(10px * var(--scale-factor)) calc(20px * var(--scale-factor));
+    font-size: calc(16px * var(--scale-factor));
+    font-weight: 600;
+    border: none;
+    border-radius: calc(var(--border-radius) / 2);
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: calc(120px * var(--scale-factor));
+}
+
+#ignore-btn {
+    background-color: var(--success-color);
+    color: white;
+}
+
+#accept-btn {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+#ignore-btn:hover {
+    background-color: #2c6a4f;
+    transform: translateY(calc(-2px * var(--scale-factor)));
+}
+
+#accept-btn:hover {
+    background-color: #c77730;
+    transform: translateY(calc(-2px * var(--scale-factor)));
+}
+
+.knowledge-option {
+    display: inline-block;
+    margin: calc(5px * var(--scale-factor));
+    padding: calc(8px * var(--scale-factor)) calc(16px * var(--scale-factor));
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: calc(var(--border-radius) / 2);
+    cursor: pointer;
+    font-size: calc(14px * var(--scale-factor));
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.knowledge-option:hover {
+    background-color: #1e5180;
+    transform: translateY(calc(-2px * var(--scale-factor)));
+}
+/* אפקטים ויזואליים נוספים */
+.animated-coin, .falling-coin, .income-coin {
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 30;
+}
+
+.total-bonus, .money-loss, .income-text {
+    position: absolute;
+    font-weight: bold;
+    z-index: 30;
+}
+
+.firework-particle, .golden-rain {
+    position: absolute;
+    border-radius: 50%;
+    z-index: 92;
+}
+
+.star {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    z-index: 2;
+    transition: opacity 4s ease;
+}
+
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    z-index: 4;
+    transition: opacity 0.5s;
+}
+
+.cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: inherit;
+    border-radius: inherit;
+}
+
+.cloud::before {
+    width: 60%;
+    height: 80%;
+    top: -40%;
+    left: 15%;
+}
+
+.cloud::after {
+    width: 70%;
+    height: 90%;
+    top: -30%;
+    right: 10%;
+}
+
+.bird {
+    position: absolute;
+    z-index: 4;
+    transition: opacity 0.5s;
+}
+
+.dust-particle {
+    position: absolute;
+    border-radius: 50%;
+    z-index: 12;
+}
+
+.fade-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0);
+    transition: background-color 0.8s ease;
+    z-index: 150;
+}
+
+/* התאמות לפי גודל מסך */
 @media (max-width: 768px) {
     .game-display {
-        font-size: 24px; /* Slightly smaller on mobile but still larger than original */
-        padding: 16px 24px;
+        padding: calc(var(--spacing-small) * 1.5) calc(var(--spacing-medium) * 1.5);
     }
     
     .dialog-box {
         width: 90%;
-        max-width: 600px; /* Increased from original but adapted for mobile */
-        padding: 40px;
+        max-width: calc(400px * var(--scale-factor));
+        padding: calc(var(--spacing-medium) * 1.5);
     }
     
     .dialog-box h3 {
-        font-size: 32px;
+        font-size: calc(18px * var(--scale-factor));
     }
     
     .dialog-box p {
-        font-size: 24px;
+        font-size: calc(14px * var(--scale-factor));
     }
     
     .dialog-box button {
-        padding: 16px 32px;
-        font-size: 24px;
+        padding: calc(8px * var(--scale-factor)) calc(16px * var(--scale-factor));
+        font-size: calc(14px * var(--scale-factor));
     }
     
     #welcome-content h1 {
-        font-size: 36px;
+        font-size: calc(20px * var(--scale-factor));
     }
     
     #welcome-content p {
-        font-size: 20px;
+        font-size: calc(11px * var(--scale-factor));
     }
     
     .power-meter {
-        width: 300px;
-        height: 20px;
+        width: calc(150px * var(--scale-factor));
     }
     
     #obstacle-dialog {
         width: 90%;
-        max-width: 600px;
-        padding: 40px;
+        max-width: calc(400px * var(--scale-factor));
+        padding: calc(var(--spacing-medium) * 1.5);
     }
     
     #obstacle-dialog p {
-        font-size: 24px;
+        font-size: calc(14px * var(--scale-factor));
     }
     
     .health-bars {
-        width: 400px;
-        padding: 24px;
-        top: 180px;
+        width: calc(240px * var(--scale-factor));
+        padding: calc(var(--spacing-medium) * 1.5);
     }
     
     .finance-tip {
-        font-size: 20px;
-        padding: 16px 32px;
+        font-size: calc(12px * var(--scale-factor));
+        padding: calc(8px * var(--scale-factor)) calc(16px * var(--scale-factor));
     }
     
     #day-clock {
-        font-size: 36px;
-        padding: 8px 24px;
+        font-size: calc(20px * var(--scale-factor));
+        padding: calc(4px * var(--scale-factor)) calc(12px * var(--scale-factor));
     }
     
     #sun, #moon {
-        width: 80px;
-        height: 80px;
-        right: 120px;
-        top: 80px;
+        width: calc(40px * var(--scale-factor));
+        height: calc(40px * var(--scale-factor));
+        right: calc(60px * var(--scale-factor));
+        top: calc(40px * var(--scale-factor));
     }
 }
+
+/* התאמות לנגישות */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    #day-night-overlay,
+    #sun,
+    #moon,
+    .star {
+        transition: opacity 0.1s linear !important;
+    }
+}
+
+/* מצב כהה (אם הגדרות המערכת במצב כהה) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #333;
+        --text-color: #f8f9fa;
+        --card-color: rgba(50, 50, 50, 0.95);
+    }
+    
+    .game-display,
+    #monthly-stats,
+    .health-bars {
+        background-color: rgba(50, 50, 50, 0.9);
+        color: var(--text-light);
+    }
+    
+    .dialog-box {
+        background-color: var(--card-color);
+        color: var(--text-light);
+    }
+    
+    .dialog-box h3 {
+        color: #6ca6cd;
+    }
+}
+
+/* אנימציות תומכות נוספות */
+@keyframes total-bonus-anim {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    30% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -100%) scale(1); }
+}
+
+@keyframes money-loss-anim {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    30% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, 0) scale(1); }
+}
+
+@keyframes income-text-anim {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    30% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+    70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -200%) scale(1); }
+}
+
+/* 
+ * סגנונות נוספים לאנימציות דינמיות
+ * הערה: רוב האנימציות הדינמיות מיוצרות בזמן ריצה בקוד JavaScript
+ * עם מזהים ייחודיים לכל אינסטנס, לכן לא ניתן להגדיר את כולן מראש כאן.
+ * האנימציות הבסיסיות מוגדרות למעלה, ואלו הדינמיות מתווספות בזמן אמת.
+ */
